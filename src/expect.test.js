@@ -72,16 +72,38 @@ describe("expect", () => {
     }).toThrow();
   });
 
-  it("{a: {b: 1}}", () => {
+  it("match {a: {b: 1}}", () => {
     myExpect({a: {b:1}}).match({a: {b:1}});
   });
 
-  it("{a: {b: {c: 1}}}", () => {
+  it("match {a: {b: {c: 1}}}", () => {
     myExpect({a: {b: {c:1}}}).match({a: {b: {c:1}}});
   });
 
-  it("{a: [1, 2]}}", () => {
+  it("match {a: [1, 2]}}", () => {
     myExpect({a: [1,2]}).match({a: myExpect.any(Array)});
+  });
+
+  it("[1, 2] match [any(Number)]", () => {
+    myExpect([1,2]).match([myExpect.any(Number)]);
+  });
+
+  it("['1', '2'] match [any(Number)] should throw", () => {
+    expect(() => {
+      myExpect(["1","2"]).match([myExpect.any(Number)]);
+    }).toThrow();
+  });
+
+  it("[{a:1, b:2, c: 's'}] match [{a:expect.any(Number), b: 2, c: any(String)}] should throw", () => {
+    myExpect([{
+      a:1,
+      b: 2,
+      c: "s",
+    }]).match([{
+      a: myExpect.any(Number),
+      b: 2,
+      c: myExpect.any(String),
+    }]);
   });
 
   it("{a:1} to.has.property('a').which.is.defined().that.is.number()", () => {

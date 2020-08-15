@@ -156,7 +156,6 @@ class Expectation{
 
   property(propertyName){
     const propertyValue = this.actual[propertyName];
-    console.log("!!!!!!!!!!!!!!!:", propertyValue);
     if(propertyValue === undefined){
       this.throw(`has property:${propertyName}`);
     }else{
@@ -187,6 +186,34 @@ class Expectation{
       }else{
         return this;
       }
+    }else if(object instanceof Array){
+      if(object.length !== 1){
+        throw Error("just 1 length of array allowed here");
+      }
+      const target = object[0];
+      if(!(this.actual instanceof Array)){
+        this.throw(`match array of ${JSON.stringify(target, null, 2)}`);
+      }
+      if(target instanceof Matcher){
+        try{
+          this.actual.forEach(a => {
+            if(!this._equalWithActual(a, target)){
+              throw Error();
+            }
+          });
+        }catch(e){
+          this.throw(`match array of ${JSON.stringify(target, null, 2)}`);
+        }
+      }else{
+        try{
+          this.actual.forEach(a => {
+            expect(a).match(target);
+          });
+        }catch(e){
+          this.throw(`match array of ${JSON.stringify(target, null, 2)}`);
+        }
+      }
+
     }else if(typeof object === "object"){
       let matched = true;
       Object.keys(object).forEach(key => {
