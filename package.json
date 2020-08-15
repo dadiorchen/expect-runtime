@@ -2,7 +2,7 @@
   "name": "expect-runtime",
   "version": "0.1.0",
   "description": "expect assertion on the runtime",
-  "main": "index.js",
+  "main": "./src/expect.js",
   "scripts": {
     "test": "jest"
   },
@@ -16,7 +16,7 @@
     "test",
     "TDD"
   ],
-  "author": "Dadior Chen",
+  "author": "Dadiorchen",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dadiorchen/expect-runtime/issues"
