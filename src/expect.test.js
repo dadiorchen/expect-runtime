@@ -216,18 +216,6 @@ describe("expect", () => {
     myExpect(() => {}).a(myExpect.any(Function));
   });
 
-  it("circle print", () => {
-    const b = {
-      foo: {
-        bar: null,
-        bar2: {
-          c: null,
-        },
-      }};
-    b.foo.bar = b;
-    console.log(myExpect.stringify(b));
-  });
-
   it("To call the actual", () => {
     const o = {
       s: () => console.log("call s"),
@@ -236,6 +224,29 @@ describe("expect", () => {
       .property("s")
       .defined()
       .actual();
+  });
+
+  it("Print object", () => {
+    const b = {
+      foo: {
+        bar: null,
+        bar2: {
+          c: null,
+        },
+      },
+      toString: () => "this is string",
+    };
+    b.foo.bar = b;
+    const string = myExpect.stringify(b);
+    console.log("print:", string);
+    expect(string).toMatch(/^{.*/mi);
+  });
+
+  it("Print object instance", () => {
+    const instance = myExpect.anything();
+    const string = myExpect.stringify(instance);
+    console.log("print:", string);
+    expect(string).toMatch(/^\[.*{.*/mi);
   });
 
 });

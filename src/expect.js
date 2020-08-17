@@ -166,15 +166,9 @@ class Expectation{
   }
 
   throw(expectMessage){
-    let jsonString;
-    try{
-      jsonString = stringify(this._actual);
-    }catch(e){
-      console.error("stringify failed:", e, "the source:", this._actual);
-      jsonString = this._actual;
-    }
+    let string = stringify(this._actual);
     let flagsString = this.flags.join(" ");
-    throw Error(`[assert failed] expect ${jsonString} --to--> ${flagsString} ${expectMessage}`);
+    throw Error(`[assert failed] expect ${string} --to--> ${flagsString} ${expectMessage}`);
   }
 
   match(object){
@@ -342,23 +336,39 @@ expect.stringMatching = function(regex){
   return new StringMatching(regex);
 };
 
-function censor(censor) {
-  var i = 0;
-  return function(key, value) {
-    if(i !== 0 && (typeof(censor) === "object") && typeof(value) == "object" && censor == value){
-      return "[Circular]"; 
-    }
-    if(i >= 29){ 
-      // seems to be a hard ed maximum of 30 serialized objects?
-      return "[Unknown]";
-    }
-    ++i; // so we know we aren't using the original object anymore
-    return value;  
-  };
-}
-
 function stringify(object){
-  return JSON.stringify(object, censor(object),2);
+  let string = "";
+  if(object.constructor.name !== "Object"){
+    string += `[${object.constructor.name}] `;
+  }
+  //conver functions
+  let objectCopied = {};
+  for(var m in object){
+    if(typeof object[m] === "function"){
+      objectCopied[m] = "[Function]";
+    }else{
+      objectCopied[m] = object[m];
+    }
+  }
+  try{
+    // Note: cache should not be re-used by repeated calls to JSON.stringify.
+    var cache = [];
+    string += JSON.stringify(objectCopied, (_key, value) => {
+      if (typeof value === "object" && value !== null) {
+        // Duplicate reference found, discard key
+        if (cache.includes(value)) return "[Circle]";
+
+        // Store value in our collection
+        cache.push(value);
+      }
+      return value;
+    },2);
+    cache = null; // Enable garbage collection   string = JSON.stringify(objectCopied, censor(object),2);
+  }catch(e){
+    console.error("stringify failed:", e, "the source:", objectCopied);
+    string += this._actual;
+  }
+  return string;
 }
 
 expect.stringify = stringify;
