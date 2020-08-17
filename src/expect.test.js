@@ -235,7 +235,7 @@ describe("expect", () => {
     myExpect(o)
       .property("s")
       .defined()
-      .retrieve();
+      .actual();
   });
 
 });

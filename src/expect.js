@@ -93,7 +93,7 @@ class Expectation{
   get but(){return this;}
   get does(){return this;}
   get still(){return this;}
-  get retrieve(){return this._actual;}
+  get actual(){return this._actual;}
 
   get not() {
     this.addFlag("not");
@@ -168,10 +168,10 @@ class Expectation{
   throw(expectMessage){
     let jsonString;
     try{
-      jsonString = stringify(this._actual, null, 2);
+      jsonString = stringify(this._actual);
     }catch(e){
       console.error("stringify failed:", e, "the source:", this._actual);
-      jsonString = this._actual
+      jsonString = this._actual;
     }
     let flagsString = this.flags.join(" ");
     throw Error(`[assert failed] expect ${jsonString} --to--> ${flagsString} ${expectMessage}`);
