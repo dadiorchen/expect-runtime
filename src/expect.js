@@ -68,8 +68,8 @@ class StringMatching extends Matcher{
 
 class Expectation{
 
-  constructor(actual){
-    this.actual = actual;
+  constructor(_actual){
+    this._actual = _actual;
     this.flags = [];
     this.lengthOf.above = (...args) => {
       this.addFlag("lengthOf");
@@ -93,6 +93,7 @@ class Expectation{
   get but(){return this;}
   get does(){return this;}
   get still(){return this;}
+  get retrieve(){return this._actual;}
 
   get not() {
     this.addFlag("not");
@@ -105,38 +106,38 @@ class Expectation{
 
   _equal(expectation){
     if(expectation instanceof Matcher){
-      return expectation.equal(this.actual);
+      return expectation.equal(this._actual);
     }else{
       if(this.flags.includes("not")){
-        return this.actual !== expectation;
+        return this._actual !== expectation;
       }else{
-        return this.actual === expectation;
+        return this._actual === expectation;
       }
     }
   }
 
-  _equalWithActual(actual, expectation){
+  _equalWithActual(_actual, expectation){
     if(expectation instanceof Matcher){
-      return expectation.equal(actual);
+      return expectation.equal(_actual);
     }else{
       if(this.flags.includes("not")){
-        return actual !== expectation;
+        return _actual !== expectation;
       }else{
-        return actual === expectation;
+        return _actual === expectation;
       }
     }
   }
 
   defined(){
     if(this.flags.includes("not")){
-      if(this.actual === undefined){
+      if(this._actual === undefined){
         //pass
         return this;
       }else{
         this.throw("not be defined");
       }
     }else{
-      if(this.actual !== undefined){
+      if(this._actual !== undefined){
         //pass
         return this;
       }else{
@@ -146,7 +147,7 @@ class Expectation{
   }
 
   number(){
-    if(typeof this.actual === "number"){
+    if(typeof this._actual === "number"){
       //pass
       return this;
     }else{
@@ -155,7 +156,7 @@ class Expectation{
   }
 
   property(propertyName){
-    const propertyValue = this.actual[propertyName];
+    const propertyValue = this._actual[propertyName];
     if(propertyValue === undefined){
       this.throw(`has property:${propertyName}`);
     }else{
@@ -167,21 +168,21 @@ class Expectation{
   throw(expectMessage){
     let jsonString;
     try{
-      jsonString = JSON.stringify(this.actual, null, 2);
+      jsonString = stringify(this._actual, null, 2);
     }catch(e){
-      console.error("stringify failed:", e, "the source:", this.actual);
-      jsonString = this.actual
+      console.error("stringify failed:", e, "the source:", this._actual);
+      jsonString = this._actual
     }
     let flagsString = this.flags.join(" ");
     throw Error(`[assert failed] expect ${jsonString} --to--> ${flagsString} ${expectMessage}`);
   }
 
   match(object){
-    if(this.actual === undefined){
+    if(this._actual === undefined){
       this.throw(`match ${JSON.stringify(object, null, 2)}`);
     }
     if(object instanceof RegExp){
-      if(!object.test(this.actual)){
+      if(!object.test(this._actual)){
         this.throw(`match ${object.toString()}`);
       }else{
         return this;
@@ -191,12 +192,12 @@ class Expectation{
         throw Error("just 1 length of array allowed here");
       }
       const target = object[0];
-      if(!(this.actual instanceof Array)){
+      if(!(this._actual instanceof Array)){
         this.throw(`match array of ${JSON.stringify(target, null, 2)}`);
       }
       if(target instanceof Matcher){
         try{
-          this.actual.forEach(a => {
+          this._actual.forEach(a => {
             if(!this._equalWithActual(a, target)){
               throw Error();
             }
@@ -206,7 +207,7 @@ class Expectation{
         }
       }else{
         try{
-          this.actual.forEach(a => {
+          this._actual.forEach(a => {
             expect(a).match(target);
           });
         }catch(e){
@@ -218,12 +219,12 @@ class Expectation{
       let matched = true;
       Object.keys(object).forEach(key => {
         const value = object[key];
-        const actualValue = this.actual[key];
+        const _actualValue = this._actual[key];
         if(typeof value === "object" && !(value instanceof Matcher)){
           //nest object
-          expect(actualValue).match(value);
+          expect(_actualValue).match(value);
         }else{
-          if(this._equalWithActual(actualValue, value)){
+          if(this._equalWithActual(_actualValue, value)){
           }else{
             matched = false;
           }
@@ -240,7 +241,7 @@ class Expectation{
   }
 
   lengthOf(length){
-    if(this.actual.length === length){
+    if(this._actual.length === length){
       return this;
     }else{
       this.throw(`length of ${length}`);
@@ -256,7 +257,7 @@ class Expectation{
   }
 
   least(number){
-    if(this.actual >= number){
+    if(this._actual >= number){
       return this;
     }else {
       this.throw(`least ${number}`)
@@ -264,7 +265,7 @@ class Expectation{
   }
 
   most(number){
-    if(this.actual <= number){
+    if(this._actual <= number){
       return this;
     }else {
       this.throw(`most ${number}`)
@@ -273,13 +274,13 @@ class Expectation{
 
   above(number){
     if(this.flags.includes("lengthOf")){
-      if(this.actual.length > number){
+      if(this._actual.length > number){
         return this;
       }else {
         this.throw(`above ${number}`)
       }
     }else{
-      if(this.actual > number){
+      if(this._actual > number){
         return this;
       }else {
         this.throw(`above ${number}`)
@@ -288,7 +289,7 @@ class Expectation{
   }
 
   below(number){
-    if(this.actual < number){
+    if(this._actual < number){
       return this;
     }else {
       this.throw(`below ${number}`)
@@ -296,7 +297,7 @@ class Expectation{
   }
 
   within(left, right){
-    if(this.actual <= right && this.actual >= left){
+    if(this._actual <= right && this._actual >= left){
       return this;
     }else{
       this.throw(`within [${left},${right}]`);
@@ -312,7 +313,7 @@ class Expectation{
   }
 
   oneOf(array){
-    if(array.includes(this.actual)){
+    if(array.includes(this._actual)){
       return this;
     }else{
       this.throw(`one of ${JSON.stringify(array)}`);
@@ -324,8 +325,8 @@ class Expectation{
 
 
 
-function expect(actual){
-  const expectation = new Expectation(actual);
+function expect(_actual){
+  const expectation = new Expectation(_actual);
   return expectation;
 }
 
@@ -340,5 +341,26 @@ expect.anything = function(){
 expect.stringMatching = function(regex){
   return new StringMatching(regex);
 };
+
+function censor(censor) {
+  var i = 0;
+  return function(key, value) {
+    if(i !== 0 && (typeof(censor) === "object") && typeof(value) == "object" && censor == value){
+      return "[Circular]"; 
+    }
+    if(i >= 29){ 
+      // seems to be a hard ed maximum of 30 serialized objects?
+      return "[Unknown]";
+    }
+    ++i; // so we know we aren't using the original object anymore
+    return value;  
+  };
+}
+
+function stringify(object){
+  return JSON.stringify(object, censor(object),2);
+}
+
+expect.stringify = stringify;
 
 module.exports = expect;

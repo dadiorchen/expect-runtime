@@ -216,5 +216,27 @@ describe("expect", () => {
     myExpect(() => {}).a(myExpect.any(Function));
   });
 
+  it("circle print", () => {
+    const b = {
+      foo: {
+        bar: null,
+        bar2: {
+          c: null,
+        },
+      }};
+    b.foo.bar = b;
+    console.log(myExpect.stringify(b));
+  });
+
+  it("To call the actual", () => {
+    const o = {
+      s: () => console.log("call s"),
+    };
+    myExpect(o)
+      .property("s")
+      .defined()
+      .retrieve();
+  });
+
 });
 
