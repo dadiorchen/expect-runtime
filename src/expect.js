@@ -353,6 +353,7 @@ function stringify(object){
   try{
     // Note: cache should not be re-used by repeated calls to JSON.stringify.
     var cache = [];
+    let counter = 0;
     string += JSON.stringify(objectCopied, (_key, value) => {
       if (typeof value === "object" && value !== null) {
         // Duplicate reference found, discard key
@@ -361,12 +362,15 @@ function stringify(object){
         // Store value in our collection
         cache.push(value);
       }
+      if(counter++ > 200){
+        throw Error("stringify reach the limitation!");
+      }
       return value;
     },2);
     cache = null; // Enable garbage collection   string = JSON.stringify(objectCopied, censor(object),2);
   }catch(e){
     console.error("stringify failed:", e, "the source:", objectCopied);
-    string += this._actual;
+    string += object;
   }
   return string;
 }
