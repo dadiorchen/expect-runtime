@@ -336,7 +336,17 @@ expect.stringMatching = function(regex){
   return new StringMatching(regex);
 };
 
+expect.fail = function(){
+  throw Error("expect fail!");
+};
+
 function stringify(object){
+  if(object === undefined){
+    return object;
+  }
+  if(typeof object === "string"){
+    return `'${object}'`;
+  }
   let string = "";
   if(object.constructor.name !== "Object"){
     string += `[${object.constructor.name}] `;

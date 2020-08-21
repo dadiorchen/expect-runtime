@@ -249,5 +249,15 @@ describe("expect", () => {
     expect(string).toMatch(/^\[.*{.*/mi);
   });
 
+  it("Fail", () => {
+    expect(() => {
+      myExpect.fail();
+    });
+  });
+
+    it("Print string", () => {
+      myExpect("string1").match({a:1});
+    });
+
 });
 

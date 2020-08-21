@@ -1,6 +1,6 @@
 {
   "name": "expect-runtime",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "expect assertion on the runtime",
   "main": "./src/expect.js",
   "scripts": {
