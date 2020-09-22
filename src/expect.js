@@ -68,12 +68,17 @@ class StringMatching extends Matcher{
 
 class Expectation{
 
-  constructor(_actual){
+  constructor(_actual, message){
     this._actual = _actual;
+    this._message = message;
     this.flags = [];
     this.lengthOf.above = (...args) => {
       this.addFlag("lengthOf");
       this.above(...args);
+    }
+    this.lengthOf.most = (...args) => {
+      this.addFlag("lengthOf");
+      this.most(...args);
     }
   }
 
@@ -168,7 +173,17 @@ class Expectation{
   throw(expectMessage){
     let string = stringify(this._actual);
     let flagsString = this.flags.join(" ");
-    throw Error(`[assert failed] expect ${string} --to--> ${flagsString} ${expectMessage}`);
+    const expectRuntimeExceptionString = `[assert failed] expect ${string} --to--> ${flagsString} ${expectMessage}`;
+    if(!this._message){
+      throw new Error(expectRuntimeExceptionString);
+    }else{
+      if(typeof this._message === "function"){
+        //if the message is a function, then execute the fn and throw the return
+        throw this._message();
+      }else{
+        throw new Error(this._message);
+      }
+    }
   }
 
   match(object){
@@ -259,10 +274,18 @@ class Expectation{
   }
 
   most(number){
-    if(this._actual <= number){
-      return this;
-    }else {
-      this.throw(`most ${number}`)
+    if(this.flags.includes("lengthOf")){
+      if(this._actual.length <= number){
+        return this;
+      }else {
+        this.throw(`most ${number}`)
+      }
+    }else{
+      if(this._actual <= number){
+        return this;
+      }else {
+        this.throw(`most ${number}`)
+      }
     }
   }
 
@@ -319,8 +342,8 @@ class Expectation{
 
 
 
-function expect(_actual){
-  const expectation = new Expectation(_actual);
+function expect(_actual, message){
+  const expectation = new Expectation(_actual, message);
   return expectation;
 }
 

@@ -118,6 +118,10 @@ describe("expect", () => {
     myExpect([1,2]).to.have.lengthOf.above(0);
   });
 
+  it("[1,2] to.have.lengthOf.most(2)", () => {
+    myExpect([1,2]).to.have.lengthOf.most(2);
+  });
+
   it("1 to.be(1)", () => {
     myExpect(1).to.be.a(1);
   });
@@ -255,9 +259,26 @@ describe("expect", () => {
     });
   });
 
-    it("Print string", () => {
-      myExpect("string1").match({a:1});
-    });
+  it("Print string message", () => {
+    expect(() => {
+      myExpect(1, "this is impossible").equal(2);
+    }).toThrow(/this is impossible/);
+  });
+
+  it("Print string message in async fn", () => {
+    async function t(){
+      myExpect("tes t", "this is impossible").match(/test/);
+    }
+    expect(async () => {
+      await t();
+    }).rejects.toThrow(/this is impossible/);
+  });
+
+  it("Print callable message", () => {
+    expect(() => {
+      myExpect(1, () => new Error("this is impossible")).equal(2);
+    }).toThrow(Error);
+  });
 
 });
 
