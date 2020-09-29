@@ -337,6 +337,14 @@ class Expectation{
     }
   }
 
+  instanceOf(Type){
+    if(this._actual instanceof Type){
+      return this;
+    }else {
+      this.throw(`instanceof ${Type}`)
+    }
+  }
+
 }
 
 

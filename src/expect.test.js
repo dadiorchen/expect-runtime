@@ -280,5 +280,14 @@ describe("expect", () => {
     }).toThrow(Error);
   });
 
+  it("A instanceOf A", () => {
+    class A {}
+    const a = new A();
+    myExpect(a).instanceOf(A);
+    expect(() => {
+      myExpect(a).instanceOf(String);
+    }).toThrow(/instanceof/i);
+  });
+
 });
 
