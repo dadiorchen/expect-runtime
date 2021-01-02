@@ -122,6 +122,14 @@ describe("expect", () => {
     myExpect([1,2]).to.have.lengthOf.most(2);
   });
 
+  it("[1,2] to.have.lengthOf.below(2)", () => {
+    myExpect([1,2]).to.have.lengthOf.below(3);
+  });
+
+  it("[1,2] to.have.lengthOf.least(2)", () => {
+    myExpect([1,2]).to.have.lengthOf.least(0);
+  });
+
   describe("a", () => {
     it("1 to.be.a(1)", () => {
       myExpect(1).to.be.a(1);
