@@ -309,6 +309,12 @@ describe("expect", () => {
     }).toThrow(Error);
   });
 
+  it("Print string message", () => {
+    expect(() => {
+      myExpect({a:[1]}, "xxxxx").property("a").lengthOf.above(2);
+    }).toThrow(/xxxx/);
+  });
+
   it("A instanceOf A", () => {
     class A {}
     const a = new A();

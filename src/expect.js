@@ -165,7 +165,7 @@ class Expectation{
     if(propertyValue === undefined){
       this.throw(`has property:${propertyName}`);
     }else{
-      const expectation = new Expectation(propertyValue);
+      const expectation = new Expectation(propertyValue, this._message);
       return expectation;
     }
   }
