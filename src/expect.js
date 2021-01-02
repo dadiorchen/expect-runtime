@@ -258,6 +258,26 @@ class Expectation{
   }
 
   a(target){
+    //translate string to matcher
+    if(typeof target === "string"){
+      if(target === "array"){
+        target = expect.any(Array); 
+      }else if(target === "string"){
+        target = expect.any(String); 
+      }else if(target === "object"){
+        target = expect.any(Object); 
+      }else if(target === "number"){
+        target = expect.any(Number); 
+      }else{
+        throw new Error("do not support type string:" + target);
+      }
+//      }else if(target === "string"){
+//        target = expect.any(String); 
+//      }else if(target === "object"){
+//        target = expect.any(Object); 
+//      }else if(target === "number"){
+//      }
+    }
     if(this._equal(target)){
       return this;
     }else {
@@ -346,6 +366,10 @@ class Expectation{
   }
 
 }
+
+//shortcut
+Expectation.prototype.an = Expectation.prototype.a;
+Expectation.prototype.eq = Expectation.prototype.equal;
 
 
 

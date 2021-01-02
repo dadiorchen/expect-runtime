@@ -122,29 +122,54 @@ describe("expect", () => {
     myExpect([1,2]).to.have.lengthOf.most(2);
   });
 
-  it("1 to.be(1)", () => {
-    myExpect(1).to.be.a(1);
+  describe("a", () => {
+    it("1 to.be.a(1)", () => {
+      myExpect(1).to.be.a(1);
+    });
+
+    it("1 to.be.a(expect.any(Number))", () => {
+      myExpect(1).to.be.a(myExpect.any(Number));
+    });
+
+    it("1 to.be.a(expect.any(String)) should throw", () => {
+      expect(() => {
+        myExpect(1).to.be.a(myExpect.any(String));
+      }).toThrow();
+    });
+
+    it("[1] to.be.a(expect.any(Array))", () => {
+      myExpect([1]).to.be.a(myExpect.any(Array));
+    });
+
+    it("1 to.be.a(expect.any(Array)) should throw", () => {
+      expect(() => {
+        myExpect(1).to.be.a(myExpect.any(Array));
+      }).toThrow();
+    });
+
+    it("[1] to.be.a('array')", () => {
+      myExpect([1]).to.be.a("array");
+    });
+
+    it("'s' to.be.a('string')", () => {
+      myExpect('s').to.be.a("string");
+    });
+
+    it("{s:1} to.be.an('object')", () => {
+      myExpect({s:1}).to.be.an("object");
+    });
+
+    it("1 to.be.an('xxx') should throw", () => {
+      expect(() => {
+        myExpect("xxx").to.be.a("xxx");
+      }).toThrow();
+    });
+
+    it("1 to.be.a('number')", () => {
+      myExpect(1).to.be.a("number");
+    });
   });
 
-  it("1 to.be.a(expect.any(Number))", () => {
-    myExpect(1).to.be.a(myExpect.any(Number));
-  });
-
-  it("1 to.be.a(expect.any(String)) should throw", () => {
-    expect(() => {
-      myExpect(1).to.be.a(myExpect.any(String));
-    }).toThrow();
-  });
-
-  it("[1] to.be.a(expect.any(Array))", () => {
-    myExpect([1]).to.be.a(myExpect.any(Array));
-  });
-
-  it("1 to.be.a(expect.any(Array)) should throw", () => {
-    expect(() => {
-      myExpect(1).to.be.a(myExpect.any(Array));
-    }).toThrow();
-  });
 
   it("{a: 'abc'} match({a: expect.stringMatching(/^a/)})", () => {
     myExpect({a:"abc"}).match({
@@ -178,6 +203,10 @@ describe("expect", () => {
 
   it("1 to.equal(1)", () => {
     myExpect(1).to.equal(1);
+  });
+
+  it("1 to.eq(1)", () => {
+    myExpect(1).to.eq(1);
   });
 
   it("1 to.equal(2) throw", () => {
