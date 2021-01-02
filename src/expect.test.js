@@ -122,6 +122,14 @@ describe("expect", () => {
     myExpect([1,2]).to.have.lengthOf.most(2);
   });
 
+  it("[1,2] to.have.lengthOf.below(2)", () => {
+    myExpect([1,2]).to.have.lengthOf.below(3);
+  });
+
+  it("[1,2] to.have.lengthOf.least(2)", () => {
+    myExpect([1,2]).to.have.lengthOf.least(0);
+  });
+
   describe("a", () => {
     it("1 to.be.a(1)", () => {
       myExpect(1).to.be.a(1);
@@ -307,6 +315,12 @@ describe("expect", () => {
     expect(() => {
       myExpect(1, () => new Error("this is impossible")).equal(2);
     }).toThrow(Error);
+  });
+
+  it("Print string message", () => {
+    expect(() => {
+      myExpect({a:[1]}, "xxxxx").property("a").lengthOf.above(2);
+    }).toThrow(/xxxx/);
   });
 
   it("A instanceOf A", () => {

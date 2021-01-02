@@ -80,6 +80,14 @@ class Expectation{
       this.addFlag("lengthOf");
       this.most(...args);
     }
+    this.lengthOf.least = (...args) => {
+      this.addFlag("lengthOf");
+      this.least(...args);
+    }
+    this.lengthOf.below = (...args) => {
+      this.addFlag("lengthOf");
+      this.below(...args);
+    }
   }
 
   get to(){return this;}
@@ -165,7 +173,7 @@ class Expectation{
     if(propertyValue === undefined){
       this.throw(`has property:${propertyName}`);
     }else{
-      const expectation = new Expectation(propertyValue);
+      const expectation = new Expectation(propertyValue, this._message);
       return expectation;
     }
   }
@@ -286,10 +294,18 @@ class Expectation{
   }
 
   least(number){
-    if(this._actual >= number){
-      return this;
-    }else {
-      this.throw(`least ${number}`)
+    if(this.flags.includes("lengthOf")){
+      if(this._actual.length >= number){
+        return this;
+      }else {
+        this.throw(`least ${number}`)
+      }
+    }else{
+      if(this._actual >= number){
+        return this;
+      }else {
+        this.throw(`least ${number}`)
+      }
     }
   }
 
@@ -326,10 +342,18 @@ class Expectation{
   }
 
   below(number){
-    if(this._actual < number){
-      return this;
-    }else {
-      this.throw(`below ${number}`)
+    if(this.flags.includes("lengthOf")){
+      if(this._actual.length < number){
+        return this;
+      }else {
+        this.throw(`below ${number}`)
+      }
+    }else{
+      if(this._actual < number){
+        return this;
+      }else {
+        this.throw(`below ${number}`)
+      }
     }
   }
 
