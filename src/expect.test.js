@@ -167,9 +167,13 @@ describe("expect", () => {
       myExpect({s:1}).to.be.an("object");
     });
 
+    it("() => {} to.be.an('function')", () => {
+      myExpect(() => {}).to.be.an("function");
+    });
+
     it("1 to.be.an('xxx') should throw", () => {
       expect(() => {
-        myExpect("xxx").to.be.a("xxx");
+        myExpect("xxx").to.be.an("xxx");
       }).toThrow();
     });
 
@@ -331,6 +335,43 @@ describe("expect", () => {
       myExpect(a).instanceOf(String);
     }).toThrow(/instanceof/i);
   });
+
+  describe("error message", () => {
+
+    it("pring number", () => {
+      expect(() => {
+        myExpect(-1234).above(2);
+      }).toThrow(/1234/i);
+    });
+
+    it("pring array", () => {
+      expect(() => {
+        myExpect([1,2]).lengthOf(1);
+      }).toThrow(/1,2/i);
+    });
+
+    it("pring big array", () => {
+      expect(() => {
+        myExpect(Array.from(new Array(1000)).map(_ => "xxxx")).lengthOf(1);
+      }).toThrow(/xxxx/i);
+    });
+  });
+
+    describe("any", () => {
+
+      it("any('string')", () => {
+        myExpect("s").a(myExpect.any("string"));
+      });
+
+      it("any('number')", () => {
+        myExpect(1).a(myExpect.any("number"));
+      });
+
+      it("any('function')", () => {
+        myExpect(() => {}).a(myExpect.any("function"));
+      });
+    });
+
 
 });
 

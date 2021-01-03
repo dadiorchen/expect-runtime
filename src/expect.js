@@ -3,7 +3,22 @@ class Matcher{}
 class Any extends Matcher{
   constructor(sample){
     super();
-    this.sample = sample;
+    //cast
+    if(typeof sample === "string"){
+      if(sample === "string"){
+        this.sample = String;
+      }else if(sample === "number"){
+        this.sample = Number;
+      }else if(sample === "function"){
+        this.sample = Function;
+      }else if(sample === "object"){
+        this.sample = Object;
+      }else if(sample === "boolean"){
+        this.sample = Boolean;
+      }
+    }else{
+      this.sample = sample;
+    }
   }
 
   equal(other){
@@ -276,6 +291,8 @@ class Expectation{
         target = expect.any(Object); 
       }else if(target === "number"){
         target = expect.any(Number); 
+      }else if(target === "function"){
+        target = expect.any(Function); 
       }else{
         throw new Error("do not support type string:" + target);
       }
@@ -426,6 +443,21 @@ function stringify(object){
   if(typeof object === "string"){
     return `'${object}'`;
   }
+  if(object instanceof Array){
+    let string = `[${object}]`;
+    if(string.length > 500){
+      string = `[${object.slice(0,2)},...](length:${object.length})`;
+    }
+    if(string.length > 500){
+      string = `[...](length: ${object.length})`;
+    }
+    return string;
+  }
+
+  if(!isNaN(object)){
+    return `${object}`;
+  }
+
   let string = "";
   if(object.constructor.name !== "Object"){
     string += `[${object.constructor.name}] `;
