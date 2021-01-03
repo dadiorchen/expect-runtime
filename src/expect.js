@@ -3,7 +3,22 @@ class Matcher{}
 class Any extends Matcher{
   constructor(sample){
     super();
-    this.sample = sample;
+    //cast
+    if(typeof sample === "string"){
+      if(sample === "string"){
+        this.sample = String;
+      }else if(sample === "number"){
+        this.sample = Number;
+      }else if(sample === "function"){
+        this.sample = Function;
+      }else if(sample === "object"){
+        this.sample = Object;
+      }else if(sample === "boolean"){
+        this.sample = Boolean;
+      }
+    }else{
+      this.sample = sample;
+    }
   }
 
   equal(other){
@@ -438,6 +453,11 @@ function stringify(object){
     }
     return string;
   }
+
+  if(!isNaN(object)){
+    return `${object}`;
+  }
+
   let string = "";
   if(object.constructor.name !== "Object"){
     string += `[${object.constructor.name}] `;

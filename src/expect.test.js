@@ -338,6 +338,12 @@ describe("expect", () => {
 
   describe("error message", () => {
 
+    it("pring number", () => {
+      expect(() => {
+        myExpect(-1234).above(2);
+      }).toThrow(/1234/i);
+    });
+
     it("pring array", () => {
       expect(() => {
         myExpect([1,2]).lengthOf(1);
@@ -350,6 +356,21 @@ describe("expect", () => {
       }).toThrow(/xxxx/i);
     });
   });
+
+    describe("any", () => {
+
+      it("any('string')", () => {
+        myExpect("s").a(myExpect.any("string"));
+      });
+
+      it("any('number')", () => {
+        myExpect(1).a(myExpect.any("number"));
+      });
+
+      it("any('function')", () => {
+        myExpect(() => {}).a(myExpect.any("function"));
+      });
+    });
 
 
 });
