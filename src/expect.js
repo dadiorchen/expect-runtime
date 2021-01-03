@@ -276,6 +276,8 @@ class Expectation{
         target = expect.any(Object); 
       }else if(target === "number"){
         target = expect.any(Number); 
+      }else if(target === "function"){
+        target = expect.any(Function); 
       }else{
         throw new Error("do not support type string:" + target);
       }

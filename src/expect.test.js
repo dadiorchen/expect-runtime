@@ -167,9 +167,13 @@ describe("expect", () => {
       myExpect({s:1}).to.be.an("object");
     });
 
+    it("() => {} to.be.an('function')", () => {
+      myExpect(() => {}).to.be.an("function");
+    });
+
     it("1 to.be.an('xxx') should throw", () => {
       expect(() => {
-        myExpect("xxx").to.be.a("xxx");
+        myExpect("xxx").to.be.an("xxx");
       }).toThrow();
     });
 
