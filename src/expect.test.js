@@ -336,5 +336,21 @@ describe("expect", () => {
     }).toThrow(/instanceof/i);
   });
 
+  describe("error message", () => {
+
+    it("pring array", () => {
+      expect(() => {
+        myExpect([1,2]).lengthOf(1);
+      }).toThrow(/1,2/i);
+    });
+
+    it("pring big array", () => {
+      expect(() => {
+        myExpect(Array.from(new Array(1000)).map(_ => "xxxx")).lengthOf(1);
+      }).toThrow(/xxxx/i);
+    });
+  });
+
+
 });
 

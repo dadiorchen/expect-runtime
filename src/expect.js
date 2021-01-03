@@ -428,6 +428,16 @@ function stringify(object){
   if(typeof object === "string"){
     return `'${object}'`;
   }
+  if(object instanceof Array){
+    let string = `[${object}]`;
+    if(string.length > 500){
+      string = `[${object.slice(0,2)},...](length:${object.length})`;
+    }
+    if(string.length > 500){
+      string = `[...](length: ${object.length})`;
+    }
+    return string;
+  }
   let string = "";
   if(object.constructor.name !== "Object"){
     string += `[${object.constructor.name}] `;
