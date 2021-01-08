@@ -355,6 +355,12 @@ describe("expect", () => {
         myExpect(Array.from(new Array(1000)).map(_ => "xxxx")).lengthOf(1);
       }).toThrow(/xxxx/i);
     });
+
+    it("pring complicated element in array", () => {
+      expect(() => {
+        myExpect([{b:1}]).match({a:1});
+      }).toThrow(/b.*:.*1/i);
+    });
   });
 
     describe("any", () => {

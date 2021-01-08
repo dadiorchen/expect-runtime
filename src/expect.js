@@ -444,7 +444,7 @@ function stringify(object){
     return `'${object}'`;
   }
   if(object instanceof Array){
-    let string = `[${object}]`;
+    let string = `[${object.map(o => stringifyObject(o)).join(",")}]`;
     if(string.length > 500){
       string = `[${object.slice(0,2)},...](length:${object.length})`;
     }
@@ -457,8 +457,15 @@ function stringify(object){
   if(!isNaN(object)){
     return `${object}`;
   }
+  const string = stringifyObject(object);
+  return string;
+}
 
+function stringifyObject(object){
   let string = "";
+  if("number" === typeof object){
+    return object + "";
+  }
   if(object.constructor.name !== "Object"){
     string += `[${object.constructor.name}] `;
   }
